@@ -9,7 +9,7 @@ class Property(models.Model):
     location = models.CharField(max_length=50)
     city = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
-    cost = models.IntegerField()
+    rent = models.IntegerField()
     bedrooms = models.IntegerField()
     kitchen = models.IntegerField()
     hall = models.CharField(max_length=3)  # 'Yes' or 'No'

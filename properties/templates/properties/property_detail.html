@@ -1,6 +1,7 @@
 {% extends 'properties/base.html' %}
 {% load static %}
 
+
 {% block body %}
 <div class="w3-container" style="margin-top:1%; margin-left: 10%; margin-right: 10%; margin-bottom: 1%;">
 
@@ -11,7 +12,7 @@
         </div>
         <div class="col-md-6 col-sm-12 about-text-container">
              <h3 class="card-title">
-                <b><h3>₹ {{ val.cost }}/-</h3></b>
+                <b><h3>₹ {{ val.rent }}/-</h3></b>
              </h3>
              
              {% if type == 'Apartment' %}
@@ -25,9 +26,9 @@
              <hr>
              
              <h5 class="card-title"><b><h3>Posted by</h3></b></h5>
-             <p>{{ user.name }}</p>
-             <p>{{ user.location }}, {{ user.city }}, {{ user.state }}</p>
-             <p style="float: right;"><b>{{ val.date }}</b></p>
+             <h5>{{ user.username }}</h5>
+             
+             <a href="#" class="chat-button">CHAT WITH OWNER</a>
 
             
         </div>
@@ -43,8 +44,8 @@
                 <tr>
                     <td style="width: 25%; height: 40px;">Type:</td>
                     <td style="width: 30%; height: 40px;">{{ type }}</td>
-                    <td style="width: 25%; height: 40px;">Cost:</td>
-                    <td style="width: 25%; height: 40px;">₹ {{ val.cost }}/-</td>
+                    <td style="width: 25%; height: 40px;">rent:</td>
+                    <td style="width: 25%; height: 40px;">₹ {{ val.rent }}/-</td>
                 </tr>
                 {% if type == 'House' %}
                 <tr>
@@ -77,10 +78,12 @@
         
         <div class="col-md-6 col-sm-12">
             <h3 class="card-title"><b>Author's Info</b></h3>
-            <p>{{ user.name }}</p>
+            <p>{{ user.username }}</p>
             <p>{{ user.location }}, {{ user.city }}, {{ user.state }}</p>
-            <p>{{ user.email }}</p>
-            <p>Contact no. {{ user.number }}</p>
+            {% comment %} <p>{{ user.email }}</p> {% endcomment %}
+            <p>Contact no. {{ user.phone }}</p>
+            <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+
         </div>
     </div>
 </div>
