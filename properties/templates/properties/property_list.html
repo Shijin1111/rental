@@ -47,7 +47,7 @@
                                     </h5>
                                     <p class="card-text">{{ property.description|slice:"0:50" }}...</p>
                                     <p>{{ property.location }}, {{ property.city }}, {{ property.state }}</p>
-                                    <form action="{% url 'property_detail' property.property_id %}" method="get">
+                                    <form action="{% url 'properties:property_detail' property.property_id %}" method="get">
                                         <button style="background-color: grey"> Quick View </button>
                                     </form>
                                     
