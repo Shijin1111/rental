@@ -19,6 +19,7 @@ class Property(models.Model):
     image = models.ImageField(upload_to='property_images/', blank=True, null=True)
     date_added = models.DateField(auto_now=True)
     is_rented = models.BooleanField(default=False)
+    google_map_link = models.CharField(max_length=500, blank=True, null=True)
 
     def __str__(self):
         return f"{self.property_id} - {self.location}, {self.city}"

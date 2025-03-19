@@ -1,0 +1,12 @@
+{% extends 'properties/base.html' %}
+{% load static %}
+
+{% block body %}
+
+    {% if map_link %}
+        {{ map_link | safe}}
+    {% else %}
+        <h2>Map location unavailable</h2>
+    {% endif %}
+
+{% endblock %}

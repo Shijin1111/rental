@@ -33,6 +33,13 @@
             {% else %}
             <p>Owner details unavailable</p>
             {% endif %}
+            
+            {% if val.google_map_link %}
+                <a href="{% url "properties:map" val.property_id %}" target="_blank" class="chat-button">VIEW ON MAP</a>
+            {% else %}
+                <span class="rented-text">🚫 Map location unavailable</span>
+            {% endif %}
+
             <a href="{% url "properties:booking" val.property_id user.id %}"  class="chat-button">MAKE PAYMENT</a>
             
             {% if val.is_rented %}

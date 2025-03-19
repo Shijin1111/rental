@@ -119,3 +119,16 @@ def rent_property(request, property_id, user_id):
         return redirect("properties:property_detail", property_id=property_id)  # Redirect to property details
 
     return redirect("properties:property_detail", property_id=property_id)  # Redirect if already rented
+
+
+from django.shortcuts import get_object_or_404, redirect
+from .models import Property
+
+def view_on_map(request, property_id):
+    property_obj = get_object_or_404(Property, property_id=property_id)
+
+    if property_obj.google_map_link:
+        return render(request, "properties/map.html", {"map_link": property_obj.google_map_link})  
+
+    # If no map link is provided, redirect to property details page
+    return redirect("properties:property_details", property_id=property_id)
