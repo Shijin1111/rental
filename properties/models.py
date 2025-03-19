@@ -18,6 +18,7 @@ class Property(models.Model):
     AC = models.CharField(max_length=3)  # 'Yes' or 'No'
     image = models.ImageField(upload_to='property_images/', blank=True, null=True)
     date_added = models.DateField(auto_now=True)
+    is_rented = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.property_id} - {self.location}, {self.city}"
@@ -33,6 +34,7 @@ class Message(models.Model):
     property = models.ForeignKey("Property", on_delete=models.CASCADE)  # Message linked to a property
     message = models.TextField()
     timestamp = models.DateTimeField(default=now)
+    
 
     def __str__(self):
         return f"Message from {self.sender} to {self.receiver} at {self.timestamp}"

@@ -10,6 +10,8 @@ urlpatterns = [
     path('property_detail/<int:property_id>/', views.property_detail, name='property_detail'),
     path('chat/<int:property_id>/<int:receiver_id>/', views.chat_view, name="chat_view"),
     path('owner_chat/', views.owner_chat, name="owner_chat"),
+    path("booking/<int:property_id>/<int:user_id>/", views.booking, name="booking"),
+    path("rent/<int:property_id>/<int:user_id>/", views.rent_property, name="rent"),
 ]
 
 if settings.DEBUG:

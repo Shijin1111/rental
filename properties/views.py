@@ -75,3 +75,47 @@ def owner_chat(request):
 
     context = {"messages": messages}
     return render(request, "properties/owner_chat.html", context)
+
+
+
+import razorpay
+from django.conf import settings
+from django.shortcuts import render, get_object_or_404
+from .models import Property
+
+def booking(request, property_id, user_id):
+    property_obj = get_object_or_404(Property, property_id=property_id)
+    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+
+    payment_data = {
+        "amount": int(property_obj.rent * 100),  # Convert to paise
+        "currency": "INR",
+        "receipt": f"order_rcpt_{property_id}_{user_id}",
+        "payment_capture": 1
+    }
+    order = client.order.create(data=payment_data)
+
+    context = {
+        "order_id": order["id"],
+        "razorpay_key": settings.RAZORPAY_KEY_ID,
+        "property": property_obj
+    }
+    return render(request, "properties/payment.html", context)
+
+
+
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Property
+
+@login_required
+def rent_property(request, property_id, user_id):
+    property_obj = get_object_or_404(Property, property_id=property_id)
+
+    if not property_obj.is_rented:  # Check if the property is available
+        property_obj.rented_by = request.user
+        property_obj.is_rented = True
+        property_obj.save()
+        return redirect("properties:property_detail", property_id=property_id)  # Redirect to property details
+
+    return redirect("properties:property_detail", property_id=property_id)  # Redirect if already rented

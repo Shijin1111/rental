@@ -33,9 +33,14 @@
             {% else %}
             <p>Owner details unavailable</p>
             {% endif %}
-
-
+            <a href="{% url "properties:booking" val.property_id user.id %}"  class="chat-button">MAKE PAYMENT</a>
             
+            {% if val.is_rented %}
+                <span class="rented-text">🚫 Already Rented</span>
+            {% else %}
+                <a href="{% url 'properties:rent' val.property_id request.user.id %}" class="chat-button">BOOK NOW</a>
+            {% endif %}
+
         </div>
     </div>
 
