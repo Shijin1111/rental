@@ -27,8 +27,13 @@
              
              <h5 class="card-title"><b><h3>Posted by</h3></b></h5>
              <h5>{{ user.username }}</h5>
-             
-             <a href="#" class="chat-button">CHAT WITH OWNER</a>
+
+            {% if user and user.id %}
+            <a href="{% url 'properties:chat_view' val.property_id user.id %}" class="chat-button">CHAT WITH OWNER</a>
+            {% else %}
+            <p>Owner details unavailable</p>
+            {% endif %}
+
 
             
         </div>

@@ -1,0 +1,17 @@
+{% extends 'properties/base.html' %}
+{% block body %}
+
+<h2>Inbox</h2>
+<ul>
+    {% for user in chat_users %}
+        <li>
+            <a href="{% url 'properties:chat_view' property_id=1 receiver_id=user.id %}">
+                Chat with {{ user.name }} ({{ user.email }})
+            </a>
+        </li>
+    {% empty %}
+        <p>No messages yet.</p>
+    {% endfor %}
+</ul>
+
+{% endblock %}

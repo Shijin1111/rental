@@ -1,0 +1,32 @@
+{% extends 'properties/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="chat-container">
+    <h2>Chat with {{ receiver.name }}</h2>
+    <div class="chat-box">
+        {% for msg in messages %}
+            <div class="{% if msg.sender == request.user %}sent-message{% else %}received-message{% endif %}">
+                <p><strong>{{ msg.sender.username }}</strong>: {{ msg.message }}</p>
+                <small>{{ msg.timestamp|date:"H:i" }}</small>
+            </div>
+        {% endfor %}
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="message" placeholder="Type a message..." required>
+        <button type="submit">Send</button>
+    </form>
+</div>
+
+<style>
+    .chat-container { max-width: 600px; margin: auto; padding: 20px; }
+    .chat-box { border: 1px solid #ddd; padding: 10px; height: 300px; overflow-y: auto; background: #f9f9f9; }
+    .sent-message { text-align: right; background: #007bff; color: white; padding: 8px; margin: 5px; border-radius: 5px; }
+    .received-message { text-align: left; background: #e9ecef; padding: 8px; margin: 5px; border-radius: 5px; }
+    input { width: 80%; padding: 8px; }
+    button { background: #007bff; color: white; border: none; padding: 8px; cursor: pointer; }
+</style>
+
+{% endblock %}
