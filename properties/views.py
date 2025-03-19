@@ -126,9 +126,21 @@ from .models import Property
 
 def view_on_map(request, property_id):
     property_obj = get_object_or_404(Property, property_id=property_id)
-
+    owner = property_obj.owner if property_obj.owner else None 
+    context = {
+        'val': property_obj,
+        'user': owner,  
+        'type': 'House' if hasattr(property_obj, 'area') else 'Apartment',
+        "map_link": property_obj.google_map_link,
+    }
     if property_obj.google_map_link:
-        return render(request, "properties/map.html", {"map_link": property_obj.google_map_link})  
+        return render(request, "properties/map.html", context)  
 
     # If no map link is provided, redirect to property details page
+    property_obj = get_object_or_404(Property, pk=property_id)
+    # print(f"Property ID: {property_obj.property_id}")
+    # print(f"Owner ID: {property_obj.owner.id if property_obj.owner else 'No Owner'}")
+
+    owner = property_obj.owner if property_obj.owner else None  
+
     return redirect("properties:property_details", property_id=property_id)
