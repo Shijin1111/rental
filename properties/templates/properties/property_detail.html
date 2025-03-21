@@ -39,7 +39,13 @@
             {% else %}
                 <span class="rented-text">🚫 Map location unavailable</span>
             {% endif %}
-
+            
+            {% if val.vr_image %}
+                <a href="{% url "properties:property_vr_view" val.property_id %}" class="chat-button">VIEW IN VR</a>
+            {% else %}
+                <span class="rented-text">🚫 VR image unavailable</span>
+            {% endif %}
+            
             <a href="{% url "properties:booking" val.property_id user.id %}"  class="chat-button">MAKE PAYMENT</a>
             
             {% if val.is_rented %}
