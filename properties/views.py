@@ -144,3 +144,12 @@ def view_on_map(request, property_id):
     owner = property_obj.owner if property_obj.owner else None  
 
     return redirect("properties:property_details", property_id=property_id)
+
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import Property
+
+def property_vr_view(request, property_id):
+    property = get_object_or_404(Property, property_id=property_id)
+    return render(request, "properties/property_vr_view.html", {"vr_image_url": property.vr_image.url})

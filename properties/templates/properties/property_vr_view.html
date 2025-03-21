@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Property Tour</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <canvas id="vrCanvas"></canvas>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Initialize Three.js Scene
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("vrCanvas") });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            // Load 360° Image
+            const textureLoader = new THREE.TextureLoader();
+            const texture = textureLoader.load("{{ vr_image_url }}");  // URL from Django
+            const sphereGeometry = new THREE.SphereGeometry(500, 60, 40);
+            const sphereMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide });
+            const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            scene.add(sphere);
+
+            // Position Camera Inside the Sphere
+            camera.position.set(0, 0, 0);
+
+            // Mouse Controls for Movement
+            let lon = 0, lat = 0, phi = 0, theta = 0;
+            document.addEventListener("mousemove", function (event) {
+                lon -= event.movementX * 0.1;
+                lat += event.movementY * 0.1;
+            });
+
+            function animate() {
+                requestAnimationFrame(animate);
+                lat = Math.max(-85, Math.min(85, lat));
+                phi = THREE.MathUtils.degToRad(90 - lat);
+                theta = THREE.MathUtils.degToRad(lon);
+                camera.lookAt(
+                    Math.sin(phi) * Math.cos(theta),
+                    Math.cos(phi),
+                    Math.sin(phi) * Math.sin(theta)
+                );
+                renderer.render(scene, camera);
+            }
+            animate();
+        });
+    </script>
+</body>
+</html>
