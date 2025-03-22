@@ -104,7 +104,7 @@
                 {%endblock%}
                 {% block button %}
                 {% if request.user.is_authenticated %}
-                <a class="btn btn-outline-success navbar-profile-btn" href="/profile" style="color: white;"><strong>Profile</strong></a>
+                <a class="btn btn-outline-success navbar-profile-btn" href="{% url "properties:profile" %}" style="color: white;"><strong>Profile</strong></a>
                 <form action="/logout" method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger navbar-logout-btn" style="margin-left: 1em;"><strong>Logout</strong></button>

@@ -153,3 +153,23 @@ from .models import Property
 def property_vr_view(request, property_id):
     property = get_object_or_404(Property, property_id=property_id)
     return render(request, "properties/property_vr_view.html", {"vr_image_url": property.vr_image.url})
+
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import Property  # Import the Property model
+
+@login_required
+def profile_view(request):
+    user = request.user  # Get the currently logged-in user
+
+    # Fetch properties posted by the user
+    user_properties = Property.objects.filter(owner=user)
+
+    context = {
+        'user': user,
+        'property_no': user_properties.count(),  # Count of properties
+        'properties': user_properties,
+    }
+    
+    return render(request, 'properties/profile.html', context)

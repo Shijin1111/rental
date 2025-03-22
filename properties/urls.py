@@ -14,6 +14,7 @@ urlpatterns = [
     path("rent/<int:property_id>/<int:user_id>/", views.rent_property, name="rent"),
     path('map/<int:property_id>/', views.view_on_map, name='map'), 
     path('<int:property_id>/vr/', views.property_vr_view, name='property_vr_view'),
+    path('profile/', views.profile_view, name='profile'),
 ]
 
 if settings.DEBUG:
