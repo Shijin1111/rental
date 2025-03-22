@@ -1,0 +1,63 @@
+{% extends "properties/base.html" %}  <!-- Extend your base template if you have one -->
+
+{% block body %}
+<div class="container mt-4">
+    <h2>Post Your Property</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="area">Area (sq. ft):</label>
+        <input type="number" name="area" class="form-control" required>
+
+        <label for="floor">Floor:</label>
+        <input type="number" name="floor" class="form-control" required>
+
+        <label for="location">Location:</label>
+        <input type="text" name="location" class="form-control" required>
+
+        <label for="city">City:</label>
+        <input type="text" name="city" class="form-control" required>
+
+        <label for="state">State:</label>
+        <input type="text" name="state" class="form-control" required>
+
+        <label for="rent">Rent Amount:</label>
+        <input type="number" name="rent" class="form-control" required>
+
+        <label for="bedrooms">Number of Bedrooms:</label>
+        <input type="number" name="bedrooms" class="form-control" required>
+
+        <label for="kitchen">Number of Kitchens:</label>
+        <input type="number" name="kitchen" class="form-control" required>
+
+        <label for="hall">Hall:</label>
+        <select name="hall" class="form-control" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+
+        <label for="balcony">Balcony:</label>
+        <select name="balcony" class="form-control" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+
+        <label for="AC">Air Conditioning:</label>
+        <select name="AC" class="form-control" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+
+        <label for="description">Description:</label>
+        <textarea name="description" class="form-control" required></textarea>
+
+        <label for="image">Upload Property Image:</label>
+        <input type="file" name="image" class="form-control">
+
+        <label for="vr_image">Upload VR Image:</label>
+        <input type="file" name="vr_image" class="form-control">
+
+        <button type="submit" class="btn btn-success mt-3">Submit Property</button>
+    </form>
+</div>
+{% endblock %}

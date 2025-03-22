@@ -15,6 +15,7 @@ urlpatterns = [
     path('map/<int:property_id>/', views.view_on_map, name='map'), 
     path('<int:property_id>/vr/', views.property_vr_view, name='property_vr_view'),
     path('profile/', views.profile_view, name='profile'),
+    path('post-property/', views.post_property, name='post_property'),
 ]
 
 if settings.DEBUG:

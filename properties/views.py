@@ -173,3 +173,51 @@ def profile_view(request):
     }
     
     return render(request, 'properties/profile.html', context)
+
+
+
+from django.shortcuts import render, redirect
+from .models import Property
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .models import Property
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def post_property(request):
+    if request.method == "POST":
+        area = request.POST.get("area")
+        floor = request.POST.get("floor")
+        location = request.POST.get("location")
+        city = request.POST.get("city")
+        state = request.POST.get("state")
+        rent = request.POST.get("rent")
+        bedrooms = request.POST.get("bedrooms")
+        kitchen = request.POST.get("kitchen")
+        hall = request.POST.get("hall")
+        balcony = request.POST.get("balcony")
+        AC = request.POST.get("AC")
+        description = request.POST.get("description")
+        image = request.FILES.get("image")
+        vr_image = request.FILES.get("vr_image")
+
+        property_obj = Property.objects.create(
+            owner=request.user,
+            area=area,
+            floor=floor,
+            location=location,
+            city=city,
+            state=state,
+            rent=rent,
+            bedrooms=bedrooms,
+            kitchen=kitchen,
+            hall=hall,
+            balcony=balcony,
+            AC=AC,
+            description=description,
+            image=image,
+            vr_image=vr_image
+        )
+        return redirect("properties:profile")  # Change "home" to your property listing page
+
+    return render(request, "properties/post_property.html")

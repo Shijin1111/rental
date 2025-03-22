@@ -174,7 +174,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent" style="margin-top: 10px; margin-left: 80px;">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="/index">Home</a>
+                <a class="nav-link" href="/properties/">Home</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/home">Explore</a>
@@ -327,10 +327,10 @@
                 </div>
                 {% endif %}
                 {%endcomment %}
-                 <div class="profile-userbuttons">
+                 {% comment %} <div class="profile-userbuttons">
                     <a href="/post/"><button type="submit" class="btn btn-success btn-sm">Post ad for Apartment</button>
                     </a>
-                </div>
+                </div> {% endcomment %}
                 {%comment%}
                 {% if house %}
                 <h5 class="my-4" style="text-align: center;"> Houses - Posted for You.</h5>
@@ -369,7 +369,7 @@
 
 
                 <div class="profile-userbuttons">
-                    <a href="/posth/"><button type="submit" class="btn btn-success btn-sm">Post ad for House</button></a>
+                    <a href="{% url "properties:post_property" %}"><button type="submit" class="btn btn-success btn-sm">Post ad for property</button></a>
                 </div>
 
                 </div>
