@@ -30,39 +30,27 @@
         {% if properties %}
         <h5 class="my-4" style="text-align: center;"> Available Properties </h5>
         <div class="w3-row-padding">
-            <div class="col carousel slide my-3" data-ride="carousel">
-                <div class="carousel-inner no-padding">
-                    <div class="carousel-item active">
-                        {% for property in properties %}
-                        <div class="w3-third w3-container w3-margin-bottom">
-                            <div class="card" style="background-color: #e9ecef;">
-                                {% if property.image %}
-                                    <img src="{{ property.image.url }}" class="w3-hover-opacity" style="height: 250px; width: 100%" alt="{{ property.title }}">
-                                {% endif %}
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <span id="pricepr{{ property.id }}">
-                                            <p><b><h3>₹{{ property.rent }}</h3></b></p>
-                                        </span>
-                                    </h5>
-                                    <p class="card-text">{{ property.description|slice:"0:50" }}...</p>
-                                    <p>{{ property.location }}, {{ property.city }}, {{ property.state }}</p>
-                                    <form action="{% url 'properties:property_detail' property.property_id %}" method="get">
-                                        <button style="background-color: grey"> Quick View </button>
-                                    </form>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        {% if forloop.counter|divisibleby:3 and forloop.counter > 0 %}
-                    </div>
-                    <div class="carousel-item">
-                        {% endif %}
-                        {% endfor %}
+            {% for property in properties %}
+            <div class="w3-third w3-container w3-margin-bottom">
+                <div class="card" style="background-color: #e9ecef;">
+                    {% if property.image %}
+                        <img src="{{ property.image.url }}" class="w3-hover-opacity" style="height: 250px; width: 100%" alt="{{ property.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <p><b><h3>₹{{ property.rent }}</h3></b></p>
+                        </h5>
+                        <p class="card-text">{{ property.description|slice:"0:50" }}...</p>
+                        <p>{{ property.location }}, {{ property.city }}, {{ property.state }}</p>
+                        <form action="{% url 'properties:property_detail' property.property_id %}" method="get">
+                            <button style="background-color: grey"> Quick View </button>
+                        </form>
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
+        
         {% endif %}
     </div>
 </div>
