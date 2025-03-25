@@ -44,7 +44,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'properties',
+    'sass_processor',
 ]
+
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "sass_processor.finders.CssFinder",
+]
+SASS_PROCESSOR_ENABLED = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -126,10 +134,12 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Static files (CSS, JS, images that are NOT uploaded by users)
+
+import os
+
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),  # Ensure this folder exists
-]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # For development
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # For collectstatic
 
 # Media files (Uploaded by users)
 MEDIA_URL = '/media/'
