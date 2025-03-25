@@ -221,3 +221,46 @@ def post_property(request):
         return redirect("properties:profile")  # Change "home" to your property listing page
 
     return render(request, "properties/post_property.html")
+
+
+
+from django.shortcuts import render
+from .models import Property
+
+def property_explore(request):
+    # Get all properties initially
+    properties = Property.objects.all()
+
+    # Get search query and filter parameters from GET request
+    search_query = request.GET.get('search', '')
+    min_rent = request.GET.get('min_rent')
+    max_rent = request.GET.get('max_rent')
+    bedrooms = request.GET.get('bedrooms')
+    city = request.GET.get('city')
+    state = request.GET.get('state')
+
+    # Apply search filter (location, city, state, description)
+    if search_query:
+        properties = properties.filter(
+            location__icontains=search_query
+        ) | properties.filter(
+            city__icontains=search_query
+        ) | properties.filter(
+            state__icontains=search_query
+        ) | properties.filter(
+            description__icontains=search_query
+        )
+
+    # Apply filters
+    if min_rent:
+        properties = properties.filter(rent__gte=min_rent)
+    if max_rent:
+        properties = properties.filter(rent__lte=max_rent)
+    if bedrooms:
+        properties = properties.filter(bedrooms=bedrooms)
+    if city:
+        properties = properties.filter(city__iexact=city)
+    if state:
+        properties = properties.filter(state__iexact=state)
+
+    return render(request, 'properties/property_explore.html', {'properties': properties})

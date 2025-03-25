@@ -1,0 +1,88 @@
+{% extends 'properties/base.html' %}
+{% load static %}
+
+{% block style %}
+<style>
+    .filter-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .filter-container input, .filter-container select {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .property-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    .property-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        background: white;
+        transition: 0.3s;
+    }
+    .property-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+    .property-card:hover {
+        transform: scale(1.02);
+    }
+    .card-body {
+        padding: 15px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="jumbotron text-center">
+        <h1>Explore Homes</h1>
+        <p>Find your ideal home</p>
+    </div>
+
+    <!-- Search & Filter Form -->
+    <form method="GET" class="filter-container">
+        <input type="text" name="search" placeholder="Search location, city..." value="{{ request.GET.search }}">
+        <input type="number" name="min_rent" placeholder="Min Rent" value="{{ request.GET.min_rent }}">
+        <input type="number" name="max_rent" placeholder="Max Rent" value="{{ request.GET.max_rent }}">
+        <select name="bedrooms">
+            <option value="">Bedrooms</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+        <input type="text" name="city" placeholder="City" value="{{ request.GET.city }}">
+        <input type="text" name="state" placeholder="State" value="{{ request.GET.state }}">
+        <button type="submit">Apply Filters</button>
+    </form>
+
+    <!-- Property Listings -->
+    <div class="property-grid">
+        {% for property in properties %}
+        <div class="property-card">
+            {% if property.image %}
+                <img src="{{ property.image.url }}" alt="{{ property.title }}">
+            {% endif %}
+            <div class="card-body">
+                <h5><b>₹{{ property.rent }}</b></h5>
+                <p>{{ property.description|slice:"0:50" }}...</p>
+                <p>{{ property.location }}, {{ property.city }}, {{ property.state }}</p>
+                <a href="{% url 'properties:property_detail' property.property_id %}" class="btn btn-primary btn-sm">View Details</a>
+            </div>
+        </div>
+        {% empty %}
+        <p>No properties found.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
