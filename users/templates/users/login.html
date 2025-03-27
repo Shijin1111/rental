@@ -1,8 +1,26 @@
+{% extends "properties/base.html" %}
+
+{%block button%}
+<a class="btn btn-success navbar-signup-btn-sm" href="/register" style="margin-left: 1em;"><strong>Sign Up</strong></a> 
+{%endblock%}
+    
+{% block body %}
+<div class="w3-container" style="margin-top:1%; margin-left: 10%; margin-right: 10%;">
 <h2>Login</h2>
-<form method="POST">
+<form method="POST" class="modal-content animate" style="margin-top:0em;">
     {% csrf_token %}
+    <div class="container">
+        {% if msg %}
+            <p style="color: red">{{ msg }}</p>
+        {%endif%}
     <input type="text" name="username" placeholder="Username" required>
     <input type="password" name="password" placeholder="Password" required>
-    <button type="submit">Login</button>
+    <button type="submit" class="btn btn-success btn-block navbar-signup-btn-sm">Login</button>
+    </div>
+    <div class="container" style="background-color:#f1f1f1">
+        <span class="psw">Forgot <a href="#">password?</a></span>
+    </div>
 </form>
 <p>{{ error }}</p>
+</div>
+{% endblock %}
