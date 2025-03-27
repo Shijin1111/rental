@@ -197,6 +197,7 @@ def post_property(request):
         hall = request.POST.get("hall")
         balcony = request.POST.get("balcony")
         AC = request.POST.get("AC")
+        google_map_link = request.POST.get("google_map_link")
         description = request.POST.get("description")
         image = request.FILES.get("image")
         vr_image = request.FILES.get("vr_image")
@@ -214,6 +215,7 @@ def post_property(request):
             hall=hall,
             balcony=balcony,
             AC=AC,
+            google_map_link=google_map_link,
             description=description,
             image=image,
             vr_image=vr_image
