@@ -1,13 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home | Rental</title>
-</head>
-<body>
-    <h1>Welcome to Rental</h1>
-    <p>This is the home page inside the users app.</p>
-    <a href="{% url 'login' %}">Login</a> | <a href="{% url 'register' %}">Register</a>
-</body>
-</html>
+{% extends 'properties/base.html' %}
+{% load static %}
+
+{% block style %}
+<style>
+    .w3-home-container {
+        margin-top: 1%; 
+        margin-left: 5%; 
+        margin-right: 5%; 
+        margin-bottom: 1%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        .w3-home-container {
+            margin: 0!important;
+            padding: 0!important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div>
+    <div class="jumbotron text-center" style="margin-bottom:0;">
+        <h1>Rental Properties</h1>
+        <p>Find your perfect home</p>
+    </div>
+
+    <div class="w3-container w3-home-container">
+        {% if properties %}
+        <h5 class="my-4" style="text-align: center;"> Available Properties </h5>
+        <div class="w3-row-padding">
+            {% for property in properties %}
+            <div class="w3-third w3-container w3-margin-bottom">
+                <div class="card" style="background-color: #e9ecef;">
+                    {% if property.image %}
+                        <img src="{{ property.image.url }}" class="w3-hover-opacity" style="height: 250px; width: 100%" alt="{{ property.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <p><b><h3>₹{{ property.rent }}</h3></b></p>
+                        </h5>
+                        <p class="card-text">{{ property.description|slice:"0:50" }}...</p>
+                        <p>{{ property.location }}, {{ property.city }}, {{ property.state }}</p>
+                        <form action="{% url 'properties:property_detail' property.property_id %}" method="get">
+                            <button style="background-color: grey"> Quick View </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
