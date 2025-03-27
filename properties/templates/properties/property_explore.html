@@ -1,0 +1,263 @@
+{% extends 'properties/base.html' %}
+{% load static %}
+
+{% comment %} {% block head %}
+{% load sass_tags %}
+<link rel="stylesheet" href="{% sass_src 'properties/styles.scss' %}">  
+{% endblock %} {% endcomment %}
+
+{% block style %}
+
+
+<style>
+    .filter-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .filter-container input, .filter-container select {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .property-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    .property-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        background: white;
+        transition: 0.3s;
+    }
+    .property-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+    .property-card:hover {
+        transform: scale(1.02);
+    }
+    .card-body {
+        padding: 15px;
+    }
+    @property --pos-x { syntax: '<percentage>'; initial-value: 40%; inherits: false; }
+        @property --pos-y { syntax: '<percentage>'; initial-value: 140%; inherits: false; }
+        @property --spread-x { syntax: '<percentage>'; initial-value: 130%; inherits: false; }
+        @property --spread-y { syntax: '<percentage>'; initial-value: 170%; inherits: false; }
+        @property --color-1 { syntax: '<color>'; initial-value: #000022; inherits: false; }
+        @property --color-2 { syntax: '<color>'; initial-value: #1f3f6d; inherits: false; }
+        @property --color-3 { syntax: '<color>'; initial-value: #469396; inherits: false; }
+        @property --color-4 { syntax: '<color>'; initial-value: #f1ffa5; inherits: false; }
+        @property --color-5 { syntax: '<color>'; initial-value: hsl(250, 80%, 2.5%); inherits: false;}
+        @property --border-angle { syntax: '<angle>'; initial-value: 180deg; inherits: true; }
+        @property --border-color-1 { syntax: '<color>'; initial-value:  hsla(230, 75%, 90%, 0.7); inherits: true; }
+        @property --border-color-2 { syntax: '<color>'; initial-value: hsla(230, 50%, 90%, 0.25); inherits: true; }
+        @property --stop-1 { syntax: '<percentage>'; initial-value: 37.35%; inherits: false; }
+        @property --stop-2 { syntax: '<percentage>'; initial-value: 61.36%; inherits: false; }
+        @property --stop-3 { syntax: '<percentage>'; initial-value: 78.42%; inherits: false; }
+        @property --stop-4 { syntax: '<percentage>'; initial-value: 93.52%; inherits: false; }
+        @property --stop-5 { syntax: '<percentage>'; initial-value: 100%; inherits: false; }
+        
+        :root {
+          --transition: 0.25s;
+          --spark: 1.8s;
+          --speed: 1.2s;
+        }
+        
+        *,
+        *::after,
+        *::before {
+          box-sizing: border-box;
+        }
+        
+        .custom-filter-btn  {
+          --cut: 1px;
+          --bg: radial-gradient(
+            var(--spread-x) var(--spread-y) at var(--pos-x) var(--pos-y),
+            var(--color-1) var(--stop-1),
+            var(--color-2) var(--stop-2),
+            var(--color-3) var(--stop-3),
+            var(--color-4) var(--stop-4),
+            var(--color-5) var(--stop-5)
+          );
+          position: relative;
+          width: 160px;
+          height: 51px;
+          padding: 16px 0;
+          border: none;
+          border-radius: 11px;
+          font: inherit;
+          font-size: 16px;
+          font-weight: 500;
+          line-height: 19px;
+          letter-spacing: inherit;
+          color: rgba(255, 255, 255, 0.95);
+          background: var(--bg);
+          cursor: pointer;
+          text-shadow: 0 0 2px rgba(0, 0, 0, 0.95);
+          overflow: hidden;
+          -webkit-font-smoothing: antialiased;
+          -webkit-tap-highlight-color: transparent;
+          transition: 
+            --pos-x .75s, --pos-y .75s,
+            --spread-x .75s, --spread-y .75s,
+            --color-1 .75s, --color-2 .75s, --color-3 .75s, --color-4 .75s, --color-5 .75s,
+            --border-angle .75s, --border-color-1 .75s, --border-color-2 .75s,
+            --stop-1 .75s, --stop-2 .75s, --stop-3 .75s, --stop-4 .75s, --stop-5 .75s;
+        }
+        
+        button::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          padding: 1px;
+          border-radius: inherit;
+          background-image: linear-gradient(var(--border-angle), var(--border-color-1), var(--border-color-2));
+          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          mask-composite: exclude;
+          pointer-events: none;
+        }
+        
+        button:hover {
+          --pos-x: 0%;
+          --pos-y: 120%;
+          --spread-x: 110.24%;
+          --spread-y: 110.2%;
+          --color-1: #000020;
+          --color-2: #f1ffa5;
+          --color-3: #469396;
+          --color-4: #1f3f6d;
+          --stop-1: 0%;
+          --stop-2: 10%;
+          --stop-3: 35.44%;
+          --stop-4: 71.34%;
+          --stop-5: 150%;
+          --border-angle: 190deg;
+          --border-color-1: hsl(320 75% 90% / 0.1);
+          --border-color-2: hsl(320 50% 90% / 0.35);
+          --button-line-opacity: 1;
+        }
+        
+        .label { position: relative; z-index: 1; }
+        
+        .bg {
+          position: absolute;
+          inset: var(--cut);
+          background: var(--bg);
+          border-radius: inherit;
+          transition: background var(--transition), opacity var(--transition);
+        }
+        
+        .shine {
+          position: absolute;
+          inset: 0;
+          container-type: size;
+          border-radius: inherit;
+          mix-blend-mode: soft-light;
+          opacity: var(--button-line-opacity, 0);
+          transition: .3s opacity;
+          overflow: visible;
+        }
+        
+        .shine span {
+          position: absolute;
+          inset: 0;
+          height: 100cqh;
+          aspect-ratio: 1;
+          animation: slide var(--speed) ease-in-out infinite alternate;
+          overflow: visible;
+        }
+        
+        .shine span::before {
+          content: "";
+          position: absolute;
+          inset: -100%;
+          background: conic-gradient(
+            from calc(270deg - (90deg * 0.5)),
+            transparent 0,
+            #fff 90deg,
+            transparent 90deg
+          );
+          animation: spin calc(var(--speed) * 2) infinite linear;
+        }
+        
+        @keyframes spin {
+          0% { rotate: 0deg; }
+          15%, 35% { rotate: 90deg; }
+          65%, 85% { rotate: 270deg; }
+          100% { rotate: 360deg; }
+        }
+        
+        @keyframes slide {
+          to { transform: translate(calc(100cqw - 100%), 0); }
+        }
+        
+        {% comment %} body {
+          min-height: 100dvh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: hsl(250, 80%, 2.5%);
+          font-family: "Poppins", serif;
+          font-weight: 400;
+          letter-spacing: 0.0325em;
+        } {% endcomment %}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="jumbotron text-center">
+        <h1>Explore Homes</h1>
+        <p>Find your ideal home</p>
+    </div>
+
+    <!-- Search & Filter Form -->
+    <form method="GET" class="filter-container">
+        <input type="text" name="search" placeholder="Search location, city..." value="{{ request.GET.search }}">
+        <input type="number" name="min_rent" placeholder="Min Rent" value="{{ request.GET.min_rent }}">
+        <input type="number" name="max_rent" placeholder="Max Rent" value="{{ request.GET.max_rent }}">
+        <select name="bedrooms">
+            <option value="">Bedrooms</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+        <input type="text" name="city" placeholder="City" value="{{ request.GET.city }}">
+        <input type="text" name="state" placeholder="State" value="{{ request.GET.state }}">
+        <button class="custom-filter-btn">
+            <span class="shine">
+              <span></span>  
+            </span>
+            <span class="bg"></span>
+            <span class="label">Apply filters</span>
+          </button>
+    </form>
+
+    <!-- Property Listings -->
+    <div class="property-grid">
+        {% for property in properties %}
+        <div class="property-card">
+            {% if property.image %}
+                <img src="{{ property.image.url }}" alt="{{ property.title }}">
+            {% endif %}
+            <div class="card-body">
+                <h5><b>₹{{ property.rent }}</b></h5>
+                <p>{{ property.description|slice:"0:50" }}...</p>
+                <p>{{ property.location }}, {{ property.city }}, {{ property.state }}</p>
+                <a href="{% url 'properties:property_detail' property.property_id %}" class="btn btn-primary btn-sm">View Details</a>
+            </div>
+        </div>
+        {% empty %}
+        <p>No properties found.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

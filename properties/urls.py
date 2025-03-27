@@ -13,6 +13,10 @@ urlpatterns = [
     path("booking/<int:property_id>/<int:user_id>/", views.booking, name="booking"),
     path("rent/<int:property_id>/<int:user_id>/", views.rent_property, name="rent"),
     path('map/<int:property_id>/', views.view_on_map, name='map'), 
+    path('<int:property_id>/vr/', views.property_vr_view, name='property_vr_view'),
+    path('profile/', views.profile_view, name='profile'),
+    path('post-property/', views.post_property, name='post_property'),
+    path('explore/', views.property_explore, name='property_explore'),
 ]
 
 if settings.DEBUG:

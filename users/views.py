@@ -11,7 +11,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('home')  # Change to your homepage URL
+            return redirect('home')  
     else:
         form = UserRegisterForm()
     return render(request, 'users/register.html', {'form': form})

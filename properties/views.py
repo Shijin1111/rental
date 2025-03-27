@@ -144,3 +144,123 @@ def view_on_map(request, property_id):
     owner = property_obj.owner if property_obj.owner else None  
 
     return redirect("properties:property_details", property_id=property_id)
+
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import Property
+
+def property_vr_view(request, property_id):
+    property = get_object_or_404(Property, property_id=property_id)
+    return render(request, "properties/property_vr_view.html", {"vr_image_url": property.vr_image.url})
+
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import Property  # Import the Property model
+
+@login_required
+def profile_view(request):
+    user = request.user  # Get the currently logged-in user
+
+    # Fetch properties posted by the user
+    user_properties = Property.objects.filter(owner=user)
+
+    context = {
+        'user': user,
+        'property_no': user_properties.count(),  # Count of properties
+        'properties': user_properties,
+    }
+    
+    return render(request, 'properties/profile.html', context)
+
+
+
+from django.shortcuts import render, redirect
+from .models import Property
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .models import Property
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def post_property(request):
+    if request.method == "POST":
+        area = request.POST.get("area")
+        floor = request.POST.get("floor")
+        location = request.POST.get("location")
+        city = request.POST.get("city")
+        state = request.POST.get("state")
+        rent = request.POST.get("rent")
+        bedrooms = request.POST.get("bedrooms")
+        kitchen = request.POST.get("kitchen")
+        hall = request.POST.get("hall")
+        balcony = request.POST.get("balcony")
+        AC = request.POST.get("AC")
+        description = request.POST.get("description")
+        image = request.FILES.get("image")
+        vr_image = request.FILES.get("vr_image")
+
+        property_obj = Property.objects.create(
+            owner=request.user,
+            area=area,
+            floor=floor,
+            location=location,
+            city=city,
+            state=state,
+            rent=rent,
+            bedrooms=bedrooms,
+            kitchen=kitchen,
+            hall=hall,
+            balcony=balcony,
+            AC=AC,
+            description=description,
+            image=image,
+            vr_image=vr_image
+        )
+        return redirect("properties:profile")  # Change "home" to your property listing page
+
+    return render(request, "properties/post_property.html")
+
+
+
+from django.shortcuts import render
+from .models import Property
+
+def property_explore(request):
+    # Get all properties initially
+    properties = Property.objects.all()
+
+    # Get search query and filter parameters from GET request
+    search_query = request.GET.get('search', '')
+    min_rent = request.GET.get('min_rent')
+    max_rent = request.GET.get('max_rent')
+    bedrooms = request.GET.get('bedrooms')
+    city = request.GET.get('city')
+    state = request.GET.get('state')
+
+    # Apply search filter (location, city, state, description)
+    if search_query:
+        properties = properties.filter(
+            location__icontains=search_query
+        ) | properties.filter(
+            city__icontains=search_query
+        ) | properties.filter(
+            state__icontains=search_query
+        ) | properties.filter(
+            description__icontains=search_query
+        )
+
+    # Apply filters
+    if min_rent:
+        properties = properties.filter(rent__gte=min_rent)
+    if max_rent:
+        properties = properties.filter(rent__lte=max_rent)
+    if bedrooms:
+        properties = properties.filter(bedrooms=bedrooms)
+    if city:
+        properties = properties.filter(city__iexact=city)
+    if state:
+        properties = properties.filter(state__iexact=state)
+
+    return render(request, 'properties/property_explore.html', {'properties': properties})
