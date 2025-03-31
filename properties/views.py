@@ -83,10 +83,20 @@ from django.conf import settings
 from django.shortcuts import render, get_object_or_404
 from .models import Property
 
-def booking(request, property_id, user_id):
+import razorpay
+from django.conf import settings
+from django.shortcuts import get_object_or_404, render, redirect
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from .models import Property
+import hashlib
+import hmac
+
+def booking(request, property_id, user_id): 
     property_obj = get_object_or_404(Property, property_id=property_id)
     client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
-
+    amount = int(property_obj.rent * 100)
+    # print(f"Property ID: {property_obj.property_id}")
     payment_data = {
         "amount": int(property_obj.rent * 100),  # Convert to paise
         "currency": "INR",
@@ -98,27 +108,74 @@ def booking(request, property_id, user_id):
     context = {
         "order_id": order["id"],
         "razorpay_key": settings.RAZORPAY_KEY_ID,
-        "property": property_obj
+        "property": property_obj,
+        "amount": amount
     }
     return render(request, "properties/payment.html", context)
 
+import hmac
+import hashlib
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect
+from .models import Property
+
+@csrf_exempt
+def payment_success(request):
+    if request.method == "POST":
+        razorpay_payment_id = request.POST.get("razorpay_payment_id")
+        razorpay_order_id = request.POST.get("razorpay_order_id")
+        razorpay_signature = request.POST.get("razorpay_signature")
+        property_id = request.POST.get("property_id")
+
+        # # Debugging logs
+        # print(f"Received Payment ID: {razorpay_payment_id}")
+        # print(f"Received Order ID: {razorpay_order_id}")
+        # print(f"Received Signature: {razorpay_signature}")
+        # print(f"Received Property ID: {property_id}")
+
+        if not (razorpay_payment_id and razorpay_order_id and razorpay_signature and property_id):
+            return JsonResponse({"error": "Missing required parameters"}, status=400)
+
+        # Generate HMAC SHA256 signature to compare
+        generated_signature = hmac.new(
+            settings.RAZORPAY_KEY_SECRET.encode(),
+            f"{razorpay_order_id}|{razorpay_payment_id}".encode(),
+            hashlib.sha256
+        ).hexdigest()
+
+        print(f"Generated Signature: {generated_signature}")
+
+        if generated_signature == razorpay_signature:
+            # Payment verified successfully, update property status
+            property_obj = get_object_or_404(Property, property_id=property_id)
+            if not property_obj.is_rented:
+                property_obj.rented_by = request.user
+                property_obj.is_rented = True
+                property_obj.save()
+                return JsonResponse({"success": True, "redirect_url": redirect("properties:property_detail", property_id=property_id).url})
+
+        return JsonResponse({"error": "Payment verification failed"}, status=400)
+
+    return JsonResponse({"error": "Invalid request method"}, status=405)
 
 
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Property
 
-@login_required
-def rent_property(request, property_id, user_id):
-    property_obj = get_object_or_404(Property, property_id=property_id)
+# @login_required
+# def rent_property(request, property_id, user_id):
+#     property_obj = get_object_or_404(Property, property_id=property_id)
 
-    if not property_obj.is_rented:  # Check if the property is available
-        property_obj.rented_by = request.user
-        property_obj.is_rented = True
-        property_obj.save()
-        return redirect("properties:property_detail", property_id=property_id)  # Redirect to property details
+#     if not property_obj.is_rented:  # Check if the property is available
+#         property_obj.rented_by = request.user
+#         property_obj.is_rented = True
+#         property_obj.save()
+#         return redirect("properties:property_detail", property_id=property_id)  # Redirect to property details
 
-    return redirect("properties:property_detail", property_id=property_id)  # Redirect if already rented
+#     return redirect("properties:property_detail", property_id=property_id)  # Redirect if already rented
 
 
 from django.shortcuts import get_object_or_404, redirect

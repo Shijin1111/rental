@@ -68,36 +68,56 @@
         <h2>Confirm Your Payment</h2>
         <p class="amount">Total: ₹{{ property.rent }}</p>
         <button id="pay-button" class="pay-button">Proceed to Pay</button>
+        <p>Property ID: <span id="property-id">{{ property.property_id }}</span></p>
+
         <p class="secure-badge">🔒 Secure Payment by Razorpay</p>
     </div>
 
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
+        var propertyId = document.getElementById("property-id").innerText.trim();
+
         var options = {
             "key": "{{ razorpay_key }}",
-            "amount": "{{ property.price }}" * 100,
+            "amount": "{{ amount }}",
             "currency": "INR",
-            "name": "Rental Payment",
-            "description": "Payment for property booking",
+            "name": "Property Booking",
+            "description": "Rent Payment",
             "order_id": "{{ order_id }}",
             "handler": function (response) {
-                alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
-                window.location.href = "/properties/payment-success/";
-            },
-            "prefill": {
-                "name": "{{ request.user.username }}",
-                "email": "{{ request.user.email }}",
-            },
-            "theme": {
-                "color": "#009688"
+                console.log("Payment Response:", response); // Debugging
+    
+                fetch("{% url 'properties:payment_success' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: new URLSearchParams({
+                        "razorpay_payment_id": response.razorpay_payment_id,
+                        "razorpay_order_id": response.razorpay_order_id,
+                        "razorpay_signature": response.razorpay_signature,
+                        "property_id": propertyId,
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Server Response:", data); // Debugging
+                    if (data.success) {
+                        window.location.href = data.redirect_url;
+                    } else {
+                        alert("Payment verification failed!");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
             }
         };
-
         var rzp1 = new Razorpay(options);
-        document.getElementById('pay-button').onclick = function (e) {
+        document.getElementById("pay-button").onclick = function (e) {
             rzp1.open();
             e.preventDefault();
-        }
+        };
     </script>
-
+    
 </body>
 </html>
